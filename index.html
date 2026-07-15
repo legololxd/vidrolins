@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vidro Lins — Vidraçaria em Belo Horizonte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B2530;
+    --frost:#EAF4F4;
+    --teal:#2C6E7F;
+    --teal-dark:#1E4E5A;
+    --aqua:#9FD8D0;
+    --brass:#C9A227;
+    --slate:#4B6068;
+    --white:#FFFFFF;
+    --glass-border: rgba(255,255,255,0.35);
+    --radius: 2px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{
+    scroll-behavior:smooth;
+  }
+
+  body{
+    font-family:'Inter', sans-serif;
+    color:var(--ink);
+    background:var(--frost);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3,h4{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    line-height:1.1;
+  }
+
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+
+  /* ---------- Layout scaffolding ---------- */
+
+  html{ scroll-snap-type: y mandatory; }
+  @media (max-width: 760px){
+    html{ scroll-snap-type: none; }
+  }
+
+  .panel{
+    min-height:100vh;
+    width:100%;
+    scroll-snap-align:start;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding: 110px 8vw 60px;
+  }
+
+  .panel-inner{
+    max-width:1240px;
+    margin:0 auto;
+    width:100%;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--teal-dark);
+    margin-bottom:18px;
+  }
+  .eyebrow .pane{
+    width:14px; height:14px;
+    background:linear-gradient(135deg, var(--aqua), transparent);
+    border:1px solid var(--teal);
+    transform:skew(-6deg);
+    display:inline-block;
+  }
+
+  /* ---------- Top nav ---------- */
+
+  header.topnav{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 8vw;
+    background:rgba(234,244,244,0.72);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(11,37,48,0.08);
+  }
+
+  .logo{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size:20px;
+    letter-spacing:0.01em;
+    display:flex;
+    align-items:center;
+    gap:9px;
+  }
+  .logo .mark{
+    width:20px; height:26px;
+    position:relative;
+    display:inline-block;
+  }
+  .logo .mark span{
+    position:absolute;
+    width:14px; height:20px;
+    border:1.6px solid var(--teal);
+    background:linear-gradient(160deg, rgba(159,216,208,0.55), rgba(255,255,255,0));
+  }
+  .logo .mark span:nth-child(1){ top:0; left:0; transform:skew(-8deg); }
+  .logo .mark span:nth-child(2){ top:4px; left:5px; transform:skew(-8deg); border-color:var(--brass); }
+
+  nav.links{
+    display:flex;
+    gap:34px;
+    font-size:14.5px;
+    font-weight:500;
+  }
+  nav.links a{
+    position:relative;
+    padding:4px 0;
+    color:var(--ink);
+    opacity:0.72;
+    transition:opacity .2s ease;
+  }
+  nav.links a:hover, nav.links a.active{ opacity:1; }
+  nav.links a.active::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:-2px;
+    height:2px;
+    background:var(--brass);
+  }
+
+  .nav-cta{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--ink);
+    color:var(--frost) !important;
+    padding:10px 18px;
+    font-size:13.5px;
+    font-weight:600;
+    border:1px solid var(--ink);
+    transition:background .2s ease, color .2s ease;
+  }
+  .nav-cta:hover{ background:transparent; color:var(--ink) !important; }
+
+  .burger{
+    display:none;
+    width:26px; height:20px;
+    position:relative;
+  }
+  .burger span{
+    position:absolute; left:0; right:0; height:2px;
+    background:var(--ink);
+  }
+  .burger span:nth-child(1){ top:0; }
+  .burger span:nth-child(2){ top:9px; }
+  .burger span:nth-child(3){ top:18px; }
+
+  /* ---------- Side dot nav ---------- */
+
+  .sidenav{
+    position:fixed;
+    right:26px; top:50%;
+    transform:translateY(-50%);
+    z-index:90;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .sidenav button{
+    width:11px; height:11px;
+    border:1.4px solid var(--teal);
+    background:transparent;
+    transform:rotate(45deg);
+    transition:background .25s ease, transform .25s ease;
+  }
+  .sidenav button.active{
+    background:var(--brass);
+    border-color:var(--brass);
+    transform:rotate(45deg) scale(1.3);
+  }
+  @media (max-width:1000px){ .sidenav{ display:none; } }
+
+  /* ================= HERO ================= */
+
+  #inicio{
+    background:
+      radial-gradient(circle at 82% 18%, rgba(159,216,208,0.35), transparent 45%),
+      linear-gradient(180deg, #0B2530 0%, #123846 100%);
+    color:var(--frost);
+  }
+
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.1fr 0.9fr;
+    gap:40px;
+    align-items:center;
+  }
+  @media (max-width:900px){
+    .hero-grid{ grid-template-columns:1fr; }
+  }
+
+  #inicio .eyebrow{ color:var(--aqua); }
+  #inicio .eyebrow .pane{ border-color:var(--aqua); }
+
+  h1.hero-title{
+    font-size:clamp(38px, 5.4vw, 68px);
+    max-width:11ch;
+  }
+  h1.hero-title em{
+    font-style:normal;
+    color:var(--aqua);
+  }
+
+  .hero-sub{
+    margin-top:22px;
+    font-size:17px;
+    max-width:46ch;
+    color:rgba(234,244,244,0.82);
+  }
+
+  .hero-actions{
+    margin-top:34px;
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+
+  .btn-primary{
+    background:var(--brass);
+    color:var(--ink);
+    font-weight:600;
+    padding:15px 26px;
+    font-size:14.5px;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    border:1px solid var(--brass);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(201,162,39,0.28); }
+
+  .btn-ghost{
+    padding:15px 22px;
+    font-size:14.5px;
+    font-weight:600;
+    border:1px solid rgba(234,244,244,0.4);
+    color:var(--frost);
+    transition:border-color .2s ease, background .2s ease;
+  }
+  .btn-ghost:hover{ background:rgba(234,244,244,0.08); border-color:var(--frost); }
+
+  .hero-strip{
+    margin-top:52px;
+    display:flex;
+    gap:36px;
+    flex-wrap:wrap;
+    border-top:1px solid rgba(234,244,244,0.18);
+    padding-top:22px;
+  }
+  .hero-strip div{ font-size:13.5px; color:rgba(234,244,244,0.75); }
+  .hero-strip strong{ display:block; font-family:'Space Grotesk'; font-size:15px; color:var(--frost); margin-bottom:2px; }
+
+  /* Signature: layered glass panes */
+  .panes{
+    position:relative;
+    height:420px;
+  }
+  .pane-el{
+    position:absolute;
+    border:1px solid var(--glass-border);
+    background:linear-gradient(155deg, rgba(255,255,255,0.16), rgba(255,255,255,0.02));
+    backdrop-filter:blur(3px);
+    box-shadow:0 30px 60px rgba(0,0,0,0.28);
+  }
+  .pane-el::before{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.35) 48%, transparent 56%);
+    background-size:250% 250%;
+    animation:sheen 7s ease-in-out infinite;
+  }
+  @keyframes sheen{
+    0%{ background-position:120% 0%; }
+    50%{ background-position:0% 100%; }
+    100%{ background-position:120% 0%; }
+  }
+  .pane-el.p1{ width:230px; height:300px; top:10px; left:60px; transform:rotate(-6deg); }
+  .pane-el.p2{ width:230px; height:300px; top:70px; left:150px; transform:rotate(4deg); border-color:rgba(201,162,39,0.45); }
+  .pane-el.p3{ width:230px; height:300px; top:40px; left:100px; transform:rotate(-1deg); }
+  @media (max-width:900px){ .panes{ height:280px; } .pane-el{ width:180px !important; height:230px !important; } }
+
+  /* ================= SOBRE ================= */
+
+  #sobre{ background:var(--frost); }
+  .sobre-grid{
+    display:grid;
+    grid-template-columns:0.9fr 1.1fr;
+    gap:60px;
+    align-items:start;
+  }
+  @media (max-width:900px){ .sobre-grid{ grid-template-columns:1fr; } }
+
+  h2.section-title{
+    font-size:clamp(30px, 3.6vw, 44px);
+    margin-bottom:18px;
+  }
+
+  .sobre-text p{
+    color:var(--slate);
+    font-size:16px;
+    max-width:52ch;
+  }
+  .sobre-text p + p{ margin-top:14px; }
+
+  .pillars{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:2px;
+    background:rgba(11,37,48,0.12);
+    border:1px solid rgba(11,37,48,0.12);
+  }
+  .pillar{
+    background:var(--frost);
+    padding:26px 22px;
+  }
+  .pillar .num{
+    font-family:'IBM Plex Mono';
+    font-size:12.5px;
+    color:var(--teal);
+    display:block;
+    margin-bottom:10px;
+  }
+  .pillar h4{ font-size:16px; margin-bottom:6px; }
+  .pillar p{ font-size:14px; color:var(--slate); }
+  @media (max-width:520px){ .pillars{ grid-template-columns:1fr; } }
+
+  /* ================= SERVIÇOS ================= */
+
+  #servicos{ background:var(--ink); color:var(--frost); }
+  #servicos .eyebrow{ color:var(--aqua); }
+  #servicos .eyebrow .pane{ border-color:var(--aqua); }
+
+  .services-grid{
+    margin-top:36px;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:rgba(234,244,244,0.14);
+    border:1px solid rgba(234,244,244,0.14);
+  }
+  @media (max-width:900px){ .services-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:560px){ .services-grid{ grid-template-columns:1fr; } }
+
+  .service-card{
+    background:#0F2C38;
+    padding:28px 24px;
+    transition:background .25s ease;
+  }
+  .service-card:hover{ background:#153847; }
+  .service-card svg{ width:30px; height:30px; margin-bottom:16px; }
+  .service-card h3{ font-size:17px; margin-bottom:8px; }
+  .service-card p{ font-size:13.8px; color:rgba(234,244,244,0.68); }
+
+  /* ================= GALERIA ================= */
+
+  #galeria{ background:var(--frost); }
+
+  .gallery-grid{
+    margin-top:32px;
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:14px;
+  }
+  @media (max-width:900px){ .gallery-grid{ grid-template-columns:repeat(2,1fr); } }
+
+  .gallery-item{
+    aspect-ratio:4/5;
+    overflow:hidden;
+    border:1px solid rgba(11,37,48,0.12);
+    position:relative;
+  }
+  .gallery-item img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .gallery-item .tag{
+    position:absolute;
+    left:10px; bottom:10px;
+    font-family:'IBM Plex Mono';
+    font-size:11px;
+    background:rgba(11,37,48,0.75);
+    color:var(--frost);
+    padding:5px 8px;
+    letter-spacing:0.04em;
+  }
+
+  /* ================= AVALIAÇÕES ================= */
+
+  #avaliacoes{ background:var(--aqua); }
+  #avaliacoes .eyebrow{ color:var(--teal-dark); }
+
+  .reviews-grid{
+    margin-top:32px;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+  }
+  @media (max-width:900px){ .reviews-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:600px){ .reviews-grid{ grid-template-columns:1fr; } }
+
+  .review-card{
+    background:var(--frost);
+    padding:26px 22px;
+    border:1px solid rgba(11,37,48,0.1);
+  }
+  .stars{ display:flex; gap:3px; margin-bottom:14px; }
+  .stars svg{ width:15px; height:15px; fill:var(--brass); }
+  .review-card p.quote{ font-size:14.5px; color:var(--ink); margin-bottom:16px; }
+  .review-card .who{ font-family:'IBM Plex Mono'; font-size:12px; color:var(--teal-dark); }
+
+  /* ================= FAQ ================= */
+
+  #faq{ background:var(--ink); color:var(--frost); }
+  #faq .eyebrow{ color:var(--aqua); }
+  #faq .eyebrow .pane{ border-color:var(--aqua); }
+
+  .faq-list{
+    margin-top:30px;
+    max-width:820px;
+  }
+  .faq-item{
+    border-bottom:1px solid rgba(234,244,244,0.16);
+  }
+  .faq-q{
+    width:100%;
+    text-align:left;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 4px;
+    font-size:16.5px;
+    font-family:'Space Grotesk';
+    color:var(--frost);
+  }
+  .faq-q .plus{
+    font-family:'IBM Plex Mono';
+    font-size:18px;
+    color:var(--brass);
+    transition:transform .25s ease;
+  }
+  .faq-item.open .faq-q .plus{ transform:rotate(45deg); }
+  .faq-a{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .3s ease;
+  }
+  .faq-a p{
+    padding:0 4px 20px;
+    font-size:14.5px;
+    color:rgba(234,244,244,0.72);
+    max-width:64ch;
+  }
+
+  /* ================= CONTATO ================= */
+
+  #contato{ background:var(--frost); }
+
+  .contact-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:50px;
+    align-items:start;
+    margin-top:10px;
+  }
+  @media (max-width:900px){ .contact-grid{ grid-template-columns:1fr; } }
+
+  .contact-list{ margin-top:24px; }
+  .contact-list li{
+    display:flex;
+    gap:14px;
+    padding:16px 0;
+    border-top:1px solid rgba(11,37,48,0.12);
+  }
+  .contact-list li:last-child{ border-bottom:1px solid rgba(11,37,48,0.12); }
+  .contact-list svg{ width:20px; height:20px; flex-shrink:0; margin-top:2px; color:var(--teal); }
+  .contact-list strong{ display:block; font-size:14px; margin-bottom:2px; }
+  .contact-list span{ font-size:14.5px; color:var(--slate); }
+
+  .contact-card{
+    background:var(--ink);
+    color:var(--frost);
+    padding:36px 30px;
+  }
+  .contact-card h3{ font-size:22px; margin-bottom:10px; }
+  .contact-card p{ font-size:14.5px; color:rgba(234,244,244,0.75); margin-bottom:24px; max-width:40ch; }
+  .contact-card .btn-primary{ width:100%; justify-content:center; }
+  .contact-card .btn-ghost{ width:100%; justify-content:center; margin-top:12px; }
+
+  footer{
+    padding:26px 8vw;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    font-size:12.5px;
+    color:var(--slate);
+    border-top:1px solid rgba(11,37,48,0.1);
+  }
+
+  /* mobile nav */
+  @media (max-width:900px){
+    nav.links{
+      position:fixed;
+      top:68px; left:0; right:0;
+      background:var(--ink);
+      flex-direction:column;
+      gap:0;
+      padding:10px 8vw 20px;
+      transform:translateY(-130%);
+      opacity:0;
+      transition:transform .3s ease, opacity .3s ease;
+    }
+    nav.links.open{ transform:translateY(0); opacity:1; }
+    nav.links a{ color:var(--frost); padding:14px 0; border-bottom:1px solid rgba(234,244,244,0.1); opacity:1; }
+    .nav-cta{ display:none; }
+    .burger{ display:block; }
+  }
+
+  /* ================= SCROLL REVEAL ================= */
+  .reveal{
+    opacity:0;
+    transform:translateY(22px);
+    transition:opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1);
+  }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  .reveal-1{ transition-delay:.06s; }
+  .reveal-2{ transition-delay:.12s; }
+  .reveal-3{ transition-delay:.18s; }
+  .reveal-4{ transition-delay:.24s; }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+  }
+
+  /* ================= CONTATO — FORMULÁRIO ================= */
+  .contact-grid{ grid-template-columns:1.15fr 0.85fr; }
+
+  .contact-form{
+    background:var(--frost);
+    border:1px solid rgba(11,37,48,0.14);
+    padding:34px 30px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .contact-form h3{
+    font-size:19px;
+    margin-bottom:2px;
+  }
+  .contact-form > p.form-lead{
+    font-size:14px;
+    color:var(--slate);
+    margin-bottom:6px;
+  }
+  .form-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  @media (max-width:560px){ .form-row{ grid-template-columns:1fr; } }
+
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .field label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--teal-dark);
+  }
+  .field label em{
+    font-style:normal;
+    color:var(--brass);
+    margin-left:2px;
+  }
+  .field input, .field textarea{
+    font-family:'Inter', sans-serif;
+    font-size:14.5px;
+    color:var(--ink);
+    background:var(--white);
+    border:1px solid rgba(11,37,48,0.22);
+    padding:12px 14px;
+    outline:none;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .field input::placeholder, .field textarea::placeholder{ color:rgba(75,96,104,0.55); }
+  .field input:focus, .field textarea:focus{
+    border-color:var(--teal);
+    box-shadow:0 0 0 3px rgba(44,110,127,0.14);
+  }
+  .field textarea{ resize:vertical; min-height:96px; }
+  .field.has-error input, .field.has-error textarea{ border-color:#B5432F; }
+  .field .err-msg{
+    display:none;
+    font-size:12px;
+    color:#B5432F;
+  }
+  .field.has-error .err-msg{ display:block; }
+
+  .form-buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:6px;
+  }
+  @media (max-width:560px){ .form-buttons{ grid-template-columns:1fr; } }
+
+  .btn-send{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    padding:14px 16px;
+    font-size:14px;
+    font-weight:600;
+    border:1px solid transparent;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+  }
+  .btn-send svg{ width:17px; height:17px; }
+  .btn-send:active{ transform:translateY(1px); }
+
+  .btn-send.wa{
+    background:#1E8E5A;
+    color:#fff;
+  }
+  .btn-send.wa:hover{ background:#25A96B; box-shadow:0 10px 22px rgba(30,142,90,0.28); transform:translateY(-2px); }
+
+  .btn-send.mail{
+    background:transparent;
+    color:var(--ink);
+    border-color:var(--ink);
+  }
+  .btn-send.mail:hover{ background:var(--ink); color:var(--frost); transform:translateY(-2px); }
+
+  .form-note{
+    font-size:12px;
+    color:var(--slate);
+    margin-top:-4px;
+  }
+
+  /* ================= TOAST ================= */
+  .toast{
+    position:fixed;
+    left:50%;
+    bottom:28px;
+    transform:translate(-50%, 20px);
+    background:var(--ink);
+    color:var(--frost);
+    padding:14px 20px;
+    font-size:13.5px;
+    font-weight:500;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    border-left:3px solid var(--brass);
+    box-shadow:0 20px 40px rgba(0,0,0,0.28);
+    z-index:300;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .28s ease, transform .28s ease;
+  }
+  .toast.show{ opacity:1; transform:translate(-50%, 0); pointer-events:auto; }
+  .toast.error{ border-left-color:#D9694F; }
+  .toast svg{ width:16px; height:16px; flex-shrink:0; color:var(--brass); }
+  .toast.error svg{ color:#D9694F; }
+
+  /* ================= FLOATING WHATSAPP ================= */
+  .float-wa{
+    position:fixed;
+    right:24px;
+    bottom:24px;
+    z-index:150;
+    width:56px;
+    height:56px;
+    background:#1E8E5A;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 12px 28px rgba(30,142,90,0.4);
+    transition:transform .22s ease, box-shadow .22s ease;
+    border:1px solid rgba(255,255,255,0.2);
+  }
+  .float-wa svg{ width:26px; height:26px; color:#fff; }
+  .float-wa:hover{ transform:translateY(-3px) scale(1.05); box-shadow:0 16px 34px rgba(30,142,90,0.5); }
+  .float-wa::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border:1px solid #1E8E5A;
+    opacity:0.6;
+    animation:pulse-ring 2.4s ease-out infinite;
+  }
+  @keyframes pulse-ring{
+    0%{ transform:scale(1); opacity:0.5; }
+    100%{ transform:scale(1.7); opacity:0; }
+  }
+  @media (max-width:600px){
+    .float-wa{ width:50px; height:50px; right:16px; bottom:16px; }
+    .float-wa svg{ width:22px; height:22px; }
+  }
+
+  /* ================= GALLERY LIGHTBOX ================= */
+  .gallery-item{ cursor:pointer; }
+  .gallery-item img{ transition:transform .5s cubic-bezier(.22,.61,.36,1), filter .4s ease; }
+  .gallery-item:hover img{ transform:scale(1.06); }
+  .gallery-item::after{
+    content:"⤢";
+    position:absolute;
+    top:10px; right:10px;
+    width:28px; height:28px;
+    background:rgba(11,37,48,0.75);
+    color:var(--frost);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    opacity:0;
+    transition:opacity .25s ease;
+  }
+  .gallery-item:hover::after{ opacity:1; }
+
+  .lightbox{
+    position:fixed;
+    inset:0;
+    z-index:400;
+    background:rgba(11,37,48,0.92);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .28s ease;
+  }
+  .lightbox.show{ opacity:1; pointer-events:auto; }
+  .lightbox img{
+    max-width:min(720px, 90vw);
+    max-height:82vh;
+    object-fit:contain;
+    border:1px solid rgba(234,244,244,0.2);
+    box-shadow:0 30px 70px rgba(0,0,0,0.5);
+  }
+  .lightbox .lb-tag{
+    position:absolute;
+    left:50%;
+    bottom:8vh;
+    transform:translateX(-50%);
+    font-family:'IBM Plex Mono';
+    font-size:12px;
+    letter-spacing:0.06em;
+    color:var(--frost);
+    background:rgba(11,37,48,0.6);
+    padding:8px 14px;
+  }
+  .lightbox .lb-close{
+    position:absolute;
+    top:24px; right:24px;
+    width:40px; height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--frost);
+    font-size:22px;
+    border:1px solid rgba(234,244,244,0.3);
+    transition:background .2s ease;
+  }
+  .lightbox .lb-close:hover{ background:rgba(234,244,244,0.12); }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <a href="#inicio" class="logo">
+    <span class="mark"><span></span><span></span></span>
+    VIDRO LINS
+  </a>
+  <nav class="links" id="navLinks">
+    <a href="#inicio">Início</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#servicos">Serviços</a>
+    <a href="#galeria">Galeria</a>
+    <a href="#avaliacoes">Avaliações</a>
+    <a href="#faq">Perguntas</a>
+    <a href="#contato">Contato</a>
+  </nav>
+  <a class="nav-cta" href="https://wa.me/5531991319609" target="_blank" rel="noopener">Solicitar orçamento</a>
+  <button class="burger" id="burgerBtn" aria-label="Abrir menu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="sidenav" id="sidenav">
+  <button data-target="#inicio" aria-label="Ir para Início"></button>
+  <button data-target="#sobre" aria-label="Ir para Sobre"></button>
+  <button data-target="#servicos" aria-label="Ir para Serviços"></button>
+  <button data-target="#galeria" aria-label="Ir para Galeria"></button>
+  <button data-target="#avaliacoes" aria-label="Ir para Avaliações"></button>
+  <button data-target="#faq" aria-label="Ir para Perguntas frequentes"></button>
+  <button data-target="#contato" aria-label="Ir para Contato"></button>
+</div>
+
+<!-- ================= HERO ================= -->
+<section id="inicio" class="panel">
+  <div class="panel-inner hero-grid">
+    <div>
+      <div class="eyebrow"><span class="pane"></span>Vidraçaria em Belo Horizonte</div>
+      <h1 class="hero-title">Precisão em cada <em>corte de vidro.</em></h1>
+      <p class="hero-sub">Box de banheiro, espelhos, janelas, guarda-corpos e fachadas — projetados sob medida, fabricados em vidro temperado e instalados por quem entende do assunto.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="https://wa.me/5531991319609" target="_blank" rel="noopener">
+          Pedir orçamento pelo WhatsApp
+        </a>
+        <a class="btn-ghost" href="#galeria">Ver projetos</a>
+      </div>
+      <div class="hero-strip">
+        <div><strong>Medição no local</strong>Avaliação técnica antes de fechar o serviço</div>
+        <div><strong>Vidro temperado</strong>Materiais certificados para segurança</div>
+        <div><strong>Atendimento em BH</strong>Rua Professora Gabriela Valéria, 750</div>
+      </div>
+    </div>
+    <div class="panes">
+      <div class="pane-el p1"></div>
+      <div class="pane-el p2"></div>
+      <div class="pane-el p3"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SOBRE ================= -->
+<section id="sobre" class="panel">
+  <div class="panel-inner sobre-grid">
+    <div>
+      <div class="eyebrow"><span class="pane"></span>Sobre a Vidro Lins</div>
+      <h2 class="section-title">Cada peça de vidro é um projeto, não um produto de prateleira.</h2>
+      <div class="sobre-text">
+        <p>A Vidro Lins cuida de todo o processo: visita técnica, medição precisa, corte sob medida e instalação. Trabalhamos com vidro comum e temperado para projetos residenciais e comerciais.</p>
+        <p>Cada ambiente tem uma medida e uma necessidade diferente — por isso o orçamento é sempre feito olhando para o espaço real, não para um catálogo padrão.</p>
+      </div>
+    </div>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="num">01</span>
+        <h4>Medição no local</h4>
+        <p>Visita técnica antes da fabricação, para evitar erro de encaixe.</p>
+      </div>
+      <div class="pillar">
+        <span class="num">02</span>
+        <h4>Vidro temperado</h4>
+        <p>Maior resistência e segurança para box, portas e guarda-corpos.</p>
+      </div>
+      <div class="pillar">
+        <span class="num">03</span>
+        <h4>Instalação especializada</h4>
+        <p>Equipe própria cuida do encaixe e do acabamento final.</p>
+      </div>
+      <div class="pillar">
+        <span class="num">04</span>
+        <h4>Atendimento direto</h4>
+        <p>Fale direto com quem faz o orçamento, sem intermediários.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SERVIÇOS ================= -->
+<section id="servicos" class="panel">
+  <div class="panel-inner">
+    <div class="eyebrow"><span class="pane"></span>O que fazemos</div>
+    <h2 class="section-title">Serviços</h2>
+    <div class="services-grid">
+
+      <div class="service-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="3" width="16" height="18" rx="0.5"/><path d="M4 8h16"/></svg>
+        <h3>Box para banheiro</h3>
+        <p>Box de vidro temperado sob medida, em incolor, fumê ou jateado.</p>
+      </div>
+
+      <div class="service-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 21v-3M15 21v-3"/></svg>
+        <h3>Espelhos sob medida</h3>
+        <p>Corte e instalação no formato ideal para cada ambiente.</p>
+      </div>
+
+      <div class="service-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="16"/><path d="M12 4v16M3 12h18"/></svg>
+        <h3>Janelas e portas</h3>
+        <p>Esquadrias em vidro temperado para janelas, portas e varandas.</p>
+      </div>
+
+      <div class="service-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 20h18M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/></svg>
+        <h3>Guarda-corpo de vidro</h3>
+        <p>Estrutura para sacadas e escadas, unindo segurança e vista livre.</p>
+      </div>
+
+      <div class="service-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-6h6v6"/></svg>
+        <h3>Fachadas e vitrines</h3>
+        <p>Fechamentos em vidro para fachadas comerciais e vitrines.</p>
+      </div>
+
+      <div class="service-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 4l16 16M20 4L4 20"/><rect x="3" y="3" width="18" height="18"/></svg>
+        <h3>Vidros em geral</h3>
+        <p>Corte, instalação e reposição de vidros comuns para diversos usos.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= GALERIA ================= -->
+<section id="galeria" class="panel">
+  <div class="panel-inner">
+    <div class="eyebrow"><span class="pane"></span>Projetos entregues</div>
+    <h2 class="section-title">Galeria</h2>
+    <div class="gallery-grid">
+      <!-- Troque o "src" de cada imagem abaixo pela foto do projeto correspondente -->
+      <div class="gallery-item"><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%23dcebea'/%3E%3Cpath d='M0 0 400 500M400 0 0 500' stroke='%23b7d4d1' stroke-width='2'/%3E%3C/svg%3E" alt="Box de banheiro"><span class="tag">Box</span></div>
+      <div class="gallery-item"><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%23dcebea'/%3E%3Cpath d='M0 0 400 500M400 0 0 500' stroke='%23b7d4d1' stroke-width='2'/%3E%3C/svg%3E" alt="Espelho sob medida"><span class="tag">Espelho</span></div>
+      <div class="gallery-item"><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%23dcebea'/%3E%3Cpath d='M0 0 400 500M400 0 0 500' stroke='%23b7d4d1' stroke-width='2'/%3E%3C/svg%3E" alt="Janela de vidro"><span class="tag">Janela</span></div>
+      <div class="gallery-item"><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%23dcebea'/%3E%3Cpath d='M0 0 400 500M400 0 0 500' stroke='%23b7d4d1' stroke-width='2'/%3E%3C/svg%3E" alt="Guarda-corpo de vidro"><span class="tag">Guarda-corpo</span></div>
+      <div class="gallery-item"><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%23dcebea'/%3E%3Cpath d='M0 0 400 500M400 0 0 500' stroke='%23b7d4d1' stroke-width='2'/%3E%3C/svg%3E" alt="Fachada comercial"><span class="tag">Fachada</span></div>
+      <div class="gallery-item"><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%23dcebea'/%3E%3Cpath d='M0 0 400 500M400 0 0 500' stroke='%23b7d4d1' stroke-width='2'/%3E%3C/svg%3E" alt="Porta de vidro"><span class="tag">Porta</span></div>
+      <div class="gallery-item"><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%23dcebea'/%3E%3Cpath d='M0 0 400 500M400 0 0 500' stroke='%23b7d4d1' stroke-width='2'/%3E%3C/svg%3E" alt="Vitrine comercial"><span class="tag">Vitrine</span></div>
+      <div class="gallery-item"><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='500'%3E%3Crect width='400' height='500' fill='%23dcebea'/%3E%3Cpath d='M0 0 400 500M400 0 0 500' stroke='%23b7d4d1' stroke-width='2'/%3E%3C/svg%3E" alt="Escada com guarda-corpo"><span class="tag">Escada</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= AVALIAÇÕES ================= -->
+<section id="avaliacoes" class="panel">
+  <div class="panel-inner">
+    <div class="eyebrow"><span class="pane"></span>Quem já contratou</div>
+    <h2 class="section-title">Avaliações</h2>
+    <div class="reviews-grid">
+
+      <div class="review-card">
+        <div class="stars">
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+        </div>
+        <p class="quote">"Instalaram o box do meu banheiro em menos de um dia. Ficou perfeito e sem vazamentos."</p>
+        <div class="who">Camila R. — Buritis</div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+        </div>
+        <p class="quote">"Pedi um espelho sob medida para a sala e o acabamento ficou impecável."</p>
+        <div class="who">Rodrigo A. — Savassi</div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+        </div>
+        <p class="quote">"Equipe pontual, tirou todas as minhas dúvidas antes de fechar o orçamento."</p>
+        <div class="who">Fernanda L. — Belvedere</div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+        </div>
+        <p class="quote">"Fizeram o guarda-corpo de vidro da minha varanda. Resistente e bonito."</p>
+        <div class="who">Marcos T. — Santo Antônio</div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+        </div>
+        <p class="quote">"Orçamento claro e prazo cumprido certinho. Recomendo para quem quer instalar box."</p>
+        <div class="who">Juliana P. — Castelo</div>
+      </div>
+
+      <div class="review-card">
+        <div class="stars">
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+          <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 15l-5.6 3 1.4-6.2L1 7.5l6.4-.6z"/></svg>
+        </div>
+        <p class="quote">"Troquei todos os vidros das janelas do apartamento. Serviço limpo e bem acabado."</p>
+        <div class="who">Diego M. — Sion</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq" class="panel">
+  <div class="panel-inner">
+    <div class="eyebrow"><span class="pane"></span>Dúvidas comuns</div>
+    <h2 class="section-title">Perguntas frequentes</h2>
+    <div class="faq-list" id="faqList">
+
+      <div class="faq-item">
+        <button class="faq-q"><span>Quanto tempo leva para receber um orçamento?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Normalmente respondemos em até 24 horas úteis após o envio das medidas e fotos do local.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span>Vocês fazem a instalação ou só vendem o vidro?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Cuidamos do processo completo: medição, fabricação e instalação.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span>Trabalham com vidro temperado?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Sim, trabalhamos com vidro comum e temperado, conforme a necessidade de cada projeto.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span>Atendem toda a região de Belo Horizonte?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Atendemos Belo Horizonte e cidades vizinhas. Consulte a disponibilidade para a sua região pelo WhatsApp.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span>Como faço para pedir um orçamento?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Pelo WhatsApp, telefone ou e-mail, enviando as medidas e, se possível, fotos do local.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span>Os projetos têm garantia?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Sim, todo serviço executado tem garantia. Os detalhes são combinados no fechamento do orçamento.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span>Qual o prazo de entrega padrão para vidros temperados?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>O prazo médio de fabricação e instalação varia de 10 a 15 dias úteis, dependendo do porte do projeto.</p></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q"><span>Quais as formas de pagamento aceitas?</span><span class="plus">+</span></button>
+        <div class="faq-a"><p>Aceitamos Pix com desconto, cartão de crédito em até 10x sem juros ou boleto faturado sob consulta.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTATO ================= -->
+<section id="contato" class="panel">
+  <div class="panel-inner">
+    <div class="eyebrow"><span class="pane"></span>Fale com a gente</div>
+    <h2 class="section-title">Contato</h2>
+    <div class="contact-grid">
+
+      <form class="contact-form reveal" id="orcamentoForm" novalidate>
+        <h3>Peça seu orçamento</h3>
+        <p class="form-lead">Preencha os dados abaixo e envie por WhatsApp ou e-mail — sem intermediários.</p>
+
+        <div class="form-row">
+          <div class="field" id="field-nome">
+            <label for="nome">Nome <em>*</em></label>
+            <input type="text" id="nome" placeholder="Seu nome completo" autocomplete="name">
+            <span class="err-msg">Informe seu nome.</span>
+          </div>
+          <div class="field" id="field-telefone">
+            <label for="telefone">Telefone <em>*</em></label>
+            <input type="tel" id="telefone" placeholder="(31) 90000-0000" autocomplete="tel">
+            <span class="err-msg">Informe um telefone.</span>
+          </div>
+        </div>
+
+        <div class="field" id="field-email">
+          <label for="email">E-mail <em>*</em></label>
+          <input type="email" id="email" placeholder="seuemail@exemplo.com" autocomplete="email">
+          <span class="err-msg">Informe um e-mail válido.</span>
+        </div>
+
+        <div class="field" id="field-assunto">
+          <label for="assunto">Assunto</label>
+          <input type="text" id="assunto" placeholder="Ex: Orçamento de box para banheiro">
+        </div>
+
+        <div class="field" id="field-mensagem">
+          <label for="mensagem">Mensagem <em>*</em></label>
+          <textarea id="mensagem" placeholder="Descreva o projeto: medidas, tipo de vidro, prazo desejado..."></textarea>
+          <span class="err-msg">Conte um pouco sobre o projeto.</span>
+        </div>
+
+        <div class="form-buttons">
+          <button type="button" class="btn-send wa" id="btnWhats">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.3-.5.1-.2 0-.4 0-.5C10 9.6 9.4 8.1 9.1 7.5c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.3.2-.7.2-1.2.1-1.3-.1-.1-.3-.2-.5-.3z"/><path d="M12 2a10 10 0 00-8.6 15L2 22l5.1-1.3A10 10 0 1012 2zm0 18.2c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1120.2 12 8.2 8.2 0 0112 20.2z"/></svg>
+            Enviar via WhatsApp
+          </button>
+          <button type="button" class="btn-send mail" id="btnEmail">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>
+            Enviar por e-mail
+          </button>
+        </div>
+        <p class="form-note">Respondemos em até 24h úteis com o orçamento detalhado.</p>
+      </form>
+
+      <div>
+        <ul class="contact-list reveal reveal-1">
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><strong>Endereço</strong><span><a href="https://www.google.com/maps/search/?api=1&query=Rua+Professora+Gabriela+Valeria+750" target="_blank" rel="noopener">Rua Professora Gabriela Valéria, 750</a></span></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014 2h3a2 2 0 012 1.7c.1.9.3 1.8.6 2.7a2 2 0 01-.4 2.1L8 9.9a16 16 0 006 6l1.4-1.4a2 2 0 012.1-.4c.9.3 1.8.5 2.7.6a2 2 0 011.8 2.2z"/></svg>
+            <div><strong>Telefone / WhatsApp</strong><span><a href="https://wa.me/5531991319609" target="_blank" rel="noopener">(31) 99131-9609</a></span></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>
+            <div><strong>E-mail</strong><span><a href="mailto:arthurseilaxd@gmail.com">arthurseilaxd@gmail.com</a></span></div>
+          </li>
+        </ul>
+
+        <div class="contact-card reveal reveal-2" style="margin-top:24px;">
+          <h3>Prefere falar direto?</h3>
+          <p>Chame no WhatsApp e converse agora mesmo com quem executa o serviço.</p>
+          <a class="btn-primary" href="https://wa.me/5531991319609" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+          <a class="btn-ghost" href="mailto:arthurseilaxd@gmail.com">Enviar e-mail direto</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <footer>
+    <span>© <span id="year"></span> Vidro Lins — Vidraçaria</span>
+    <span>Rua Professora Gabriela Valéria, 750 · (31) 99131-9609</span>
+  </footer>
+</section>
+
+<a class="float-wa" href="https://wa.me/5531991319609" target="_blank" rel="noopener" aria-label="Chamar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.7 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.3-.5.1-.2 0-.4 0-.5C10 9.6 9.4 8.1 9.1 7.5c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1.1 2.8 1.2 3c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.3.2-.7.2-1.2.1-1.3-.1-.1-.3-.2-.5-.3z"/><path d="M12 2a10 10 0 00-8.6 15L2 22l5.1-1.3A10 10 0 1012 2zm0 18.2c-1.6 0-3.1-.4-4.5-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1120.2 12 8.2 8.2 0 0112 20.2z"/></svg>
+</a>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toastMsg">Mensagem enviada</span>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose" aria-label="Fechar">×</button>
+  <img id="lbImg" src="" alt="">
+  <div class="lb-tag" id="lbTag"></div>
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // burger menu
+  const burger = document.getElementById('burgerBtn');
+  const navLinks = document.getElementById('navLinks');
+  burger.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // side dot nav click -> scroll
+  document.querySelectorAll('.sidenav button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelector(btn.dataset.target).scrollIntoView({ behavior:'smooth' });
+    });
+  });
+
+  // active states via IntersectionObserver
+  const sections = document.querySelectorAll('.panel');
+  const topLinks = document.querySelectorAll('nav.links a');
+  const dotBtns = document.querySelectorAll('.sidenav button');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const id = '#' + entry.target.id;
+        topLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+        dotBtns.forEach(b => b.classList.toggle('active', b.dataset.target === id));
+      }
+    });
+  }, { threshold: 0.5 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const q = item.querySelector('.faq-q');
+    const a = item.querySelector('.faq-a');
+    q.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => { i.classList.remove('open'); i.querySelector('.faq-a').style.maxHeight = null; });
+      if(!isOpen){
+        item.classList.add('open');
+        a.style.maxHeight = a.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // ---------- Toast ----------
+  let toastTimer;
+  function showToast(msg, type = 'ok'){
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.toggle('error', type === 'error');
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 4200);
+  }
+
+  // ---------- Formulário de orçamento ----------
+  const WHATSAPP_NUMERO = '5531991319609';
+  const EMAIL_DESTINO = 'arthurseilaxd@gmail.com';
+
+  function campo(id){ return document.getElementById(id); }
+
+  function validarFormulario(){
+    const regras = [
+      { id: 'nome', valido: v => v.trim().length > 1 },
+      { id: 'telefone', valido: v => v.replace(/\D/g,'').length >= 10 },
+      { id: 'email', valido: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+      { id: 'mensagem', valido: v => v.trim().length > 4 }
+    ];
+    let ok = true;
+    regras.forEach(r => {
+      const input = campo(r.id);
+      const wrapper = document.getElementById('field-' + r.id);
+      const valid = r.valido(input.value);
+      wrapper.classList.toggle('has-error', !valid);
+      if(!valid) ok = false;
+    });
+    return ok;
+  }
+
+  // limpa o erro assim que a pessoa corrige o campo
+  ['nome','telefone','email','mensagem'].forEach(id => {
+    campo(id).addEventListener('input', () => {
+      document.getElementById('field-' + id).classList.remove('has-error');
+    });
+  });
+
+  function dadosFormulario(){
+    return {
+      nome: campo('nome').value.trim(),
+      telefone: campo('telefone').value.trim(),
+      email: campo('email').value.trim(),
+      assunto: campo('assunto').value.trim() || 'Orçamento geral',
+      mensagem: campo('mensagem').value.trim()
+    };
+  }
+
+  document.getElementById('btnWhats').addEventListener('click', () => {
+    if(!validarFormulario()){
+      showToast('Preencha os campos obrigatórios (*) para continuar.', 'error');
+      return;
+    }
+    const d = dadosFormulario();
+    const texto = `Olá, Vidro Lins! Gostaria de um orçamento.\n\n` +
+                  `*Nome:* ${d.nome}\n` +
+                  `*Telefone:* ${d.telefone}\n` +
+                  `*E-mail:* ${d.email}\n` +
+                  `*Assunto:* ${d.assunto}\n` +
+                  `*Mensagem:* ${d.mensagem}`;
+    window.open(`https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(texto)}`, '_blank');
+    showToast('Abrindo o WhatsApp com sua mensagem pronta...');
+  });
+
+  document.getElementById('btnEmail').addEventListener('click', () => {
+    if(!validarFormulario()){
+      showToast('Preencha os campos obrigatórios (*) para continuar.', 'error');
+      return;
+    }
+    const d = dadosFormulario();
+    const corpo = `Olá, meu nome é ${d.nome}.\n` +
+                  `Telefone para contato: ${d.telefone}\n` +
+                  `E-mail: ${d.email}\n\n` +
+                  `Mensagem:\n${d.mensagem}`;
+    window.location.href = `mailto:${EMAIL_DESTINO}?subject=${encodeURIComponent(d.assunto)}&body=${encodeURIComponent(corpo)}`;
+    showToast('Abrindo seu aplicativo de e-mail...');
+  });
+
+  // ---------- Galeria: lightbox ----------
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbTag = document.getElementById('lbTag');
+
+  document.querySelectorAll('.gallery-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const img = item.querySelector('img');
+      const tag = item.querySelector('.tag');
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+      lbTag.textContent = tag ? tag.textContent : img.alt;
+      lightbox.classList.add('show');
+    });
+  });
+
+  function fecharLightbox(){ lightbox.classList.remove('show'); }
+  document.getElementById('lbClose').addEventListener('click', fecharLightbox);
+  lightbox.addEventListener('click', e => { if(e.target === lightbox) fecharLightbox(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharLightbox(); });
+
+  // ---------- Scroll reveal ----------
+  document.querySelectorAll('.panel-inner > *, .contact-form, .contact-list, .contact-card').forEach(el => {
+    if(!el.classList.contains('reveal')) el.classList.add('reveal');
+  });
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>
